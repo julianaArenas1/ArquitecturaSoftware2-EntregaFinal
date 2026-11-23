@@ -1,0 +1,10 @@
+$ docker network inspect (contenedores en la red)
+api-calendario  172.25.0.5/16
+api-festivos  172.25.0.4/16
+bd-festivos  172.25.0.2/16
+bd-calendario  172.25.0.3/16
+
+
+$ docker volume ls | grep entregafinal
+local     arquitecturasoftware2-entregafinal_mongo_data
+local     arquitecturasoftware2-entregafinal_postgres_data

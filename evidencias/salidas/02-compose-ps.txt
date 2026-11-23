@@ -1,0 +1,6 @@
+$ docker compose ps
+NAME             SERVICE          STATUS                        PORTS
+api-calendario   api-calendario   Up About a minute (healthy)   0.0.0.0:8091->8081/tcp, [::]:8091->8081/tcp
+api-festivos     api-festivos     Up About a minute (healthy)   0.0.0.0:3040->3030/tcp, [::]:3040->3030/tcp
+bd-calendario    bd-calendario    Up About a minute (healthy)   0.0.0.0:5433->5432/tcp, [::]:5433->5432/tcp
+bd-festivos      bd-festivos      Up About a minute (healthy)   0.0.0.0:27018->27017/tcp, [::]:27018->27017/tcp

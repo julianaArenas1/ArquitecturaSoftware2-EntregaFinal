@@ -1,0 +1,20 @@
+$ docker exec bd-calendario psql -U postgres -d calendariolaboral -c "\dt" -c "select * from tipo;"
+           List of relations
+ Schema |    Name    | Type  |  Owner   
+--------+------------+-------+----------
+ public | calendario | table | postgres
+ public | tipo       | table | postgres
+(2 rows)
+
+ id |      tipo      
+----+----------------
+  1 | Día laboral
+  2 | Fin de Semana 
+  3 | Día festivo 
+(3 rows)
+
+ registros_calendario 
+----------------------
+                    0
+(1 row)
+

@@ -1,0 +1,10 @@
+ArquitecturaSoftware2-EntregaFinal/
+├── docker-compose.yml
+├── .env.example
+├── README.md
+├── apiFestivos/            (Express/Node.js + Dockerfile)
+├── bdFestivos/             (Dockerfile + BDFestivos.js)
+├── apiCalendarioLaboral/   (módulos Onion: dominio, core, aplicacion,
+│                            infraestructura, presentacion + pom.xml + Dockerfile)
+├── bdCalendario/           (Dockerfile + DDL y DML de PostgreSQL)
+└── evidencias/             (este documento, capturas y salidas de comandos)

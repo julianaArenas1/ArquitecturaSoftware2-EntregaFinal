@@ -1,0 +1,7 @@
+$ curl http://localhost:8091/api/calendario/listar/2027  (tras reiniciar)
+registros devueltos: 365
+NAME             STATUS
+api-calendario   Up 50 seconds (healthy)
+api-festivos     Up 56 seconds (healthy)
+bd-calendario    Up About a minute (healthy)
+bd-festivos      Up About a minute (healthy)

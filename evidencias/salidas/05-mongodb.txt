@@ -1,0 +1,20 @@
+$ docker exec bd-festivos mongosh --quiet --eval "db.getSiblingDB('festivos').tipos.find({},{_id:0,id:1,tipo:1}).toArray()"
+[
+  {
+    id: 1,
+    tipo: 'Fijo'
+  },
+  {
+    id: 2,
+    tipo: 'Ley de Puente festivo'
+  },
+  {
+    id: 3,
+    tipo: ''
+  },
+  {
+    id: 4,
+    tipo: ''
+  }
+]
+documentos en tipos: 4

@@ -1,0 +1,110 @@
+# Orquestación de la solución distribuida: Festivos (Express + MongoDB) y Calendario Laboral (Spring Boot + PostgreSQL)
+#
+#   bd-festivos (Mongo) -> api-festivos (Express) -> api-calendario (Spring Boot) -> bd-calendario (PostgreSQL)
+#
+# Entre contenedores se usan los NOMBRES DE SERVICIO (bd-festivos, api-festivos, bd-calendario),
+# nunca localhost. Los puertos publicados al host solo sirven para probar desde fuera.
+# Las variables se leen del archivo .env (ver .env.example); si no existe usan los valores por defecto.
+
+services:
+
+  bd-festivos:
+    build: ./bdFestivos
+    container_name: bd-festivos
+    restart: unless-stopped
+    ports:
+      - "${MONGO_HOST_PORT:-27018}:27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - red-calendario
+    healthcheck:
+      # Healthy solo cuando el script de inicialización ya cargó los 4 tipos de festivo
+      test: ["CMD", "mongosh", "--quiet", "--eval", "quit(db.getSiblingDB('${MONGO_DB:-festivos}').tipos.countDocuments({}) >= 4 ? 0 : 1)"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 15s
+
+  api-festivos:
+    build: ./apiFestivos
+    container_name: api-festivos
+    restart: unless-stopped
+    depends_on:
+      bd-festivos:
+        condition: service_healthy
+    environment:
+      PORT: 3030
+      DB_HOST: bd-festivos
+      DB_PORT: 27017
+      DB_NAME: ${MONGO_DB:-festivos}
+      DB_USER: ""
+      DB_PASS: ""
+      SWAGGER_SERVER_URL: http://localhost:${API_FESTIVOS_HOST_PORT:-3040}
+    ports:
+      - "${API_FESTIVOS_HOST_PORT:-3040}:3030"
+    networks:
+      - red-calendario
+    healthcheck:
+      test: ["CMD", "node", "-e", "fetch('http://localhost:3030/api/festivos/obtener/2027').then(r=>process.exit(r.ok?0:1)).catch(()=>process.exit(1))"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+  bd-calendario:
+    build: ./bdCalendario
+    container_name: bd-calendario
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-calendariolaboral}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-sa}
+    ports:
+      - "${POSTGRES_HOST_PORT:-5433}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - red-calendario
+    healthcheck:
+      # -h 127.0.0.1 fuerza TCP: durante la inicialización Postgres solo escucha por socket local
+      test: ["CMD-SHELL", "pg_isready -h 127.0.0.1 -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-calendariolaboral}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 15s
+
+  api-calendario:
+    build: ./apiCalendarioLaboral
+    container_name: api-calendario
+    restart: unless-stopped
+    depends_on:
+      bd-calendario:
+        condition: service_healthy
+      api-festivos:
+        condition: service_healthy
+    environment:
+      SERVER_PORT: 8081
+      SPRING_DATASOURCE_URL: jdbc:postgresql://bd-calendario:5432/${POSTGRES_DB:-calendariolaboral}
+      SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER:-postgres}
+      SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD:-sa}
+      SERVICIO_EXTERNO_FESTIVOS_URL: http://api-festivos:3030/api/festivos
+    ports:
+      - "${API_CALENDARIO_HOST_PORT:-8091}:8081"
+    networks:
+      - red-calendario
+    healthcheck:
+      # La imagen JRE no trae curl: se prueba que el puerto 8081 acepte conexiones
+      test: ["CMD-SHELL", "bash -c 'exec 3<>/dev/tcp/127.0.0.1/8081'"]
+      interval: 10s
+      timeout: 5s
+      retries: 12
+      start_period: 30s
+
+networks:
+  red-calendario:
+    driver: bridge
+
+volumes:
+  mongo_data:
+  postgres_data:

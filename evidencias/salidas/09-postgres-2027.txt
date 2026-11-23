@@ -1,0 +1,13 @@
+$ docker exec bd-calendario psql ... (resumen 2027)
+ total_2027 |    min     |    max     
+------------+------------+------------
+        365 | 2027-01-01 | 2027-12-31
+(1 row)
+
+ id |      tipo      | dias 
+----+----------------+------
+  1 | Día laboral    |  246
+  2 | Fin de Semana  |  100
+  3 | Día festivo    |   19
+(3 rows)
+

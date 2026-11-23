@@ -1,0 +1,15 @@
+$ select c.fecha, c.descripcion, t.tipo from calendario c join tipo t ... (muestra)
+   fecha    | descripcion |      tipo      
+------------+-------------+----------------
+ 2027-01-01 | Viernes     | Día festivo 
+ 2027-01-02 | Sábado      | Fin de Semana 
+ 2027-01-03 | Domingo     | Fin de Semana 
+ 2027-01-04 | Lunes       | Día laboral
+ 2027-03-25 | Jueves      | Día festivo 
+ 2027-03-26 | Viernes     | Día festivo 
+ 2027-03-28 | Domingo     | Día festivo 
+ 2027-05-01 | Sábado      | Día festivo 
+ 2027-12-24 | Viernes     | Día laboral
+ 2027-12-25 | Sábado      | Día festivo 
+(10 rows)
+

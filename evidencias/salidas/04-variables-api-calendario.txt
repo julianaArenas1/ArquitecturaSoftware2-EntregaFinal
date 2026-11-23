@@ -1,0 +1,5 @@
+$ docker exec api-calendario env | grep -E 'SPRING|SERVICIO|SERVER'
+SERVICIO_EXTERNO_FESTIVOS_URL=http://api-festivos:3030/api/festivos
+SERVER_PORT=8081
+SPRING_DATASOURCE_URL=jdbc:postgresql://bd-calendario:5432/calendariolaboral
+SPRING_DATASOURCE_USERNAME=postgres

@@ -1,0 +1,13 @@
+$ docker compose down   # sin -v
+ Container bd-festivos Stopping 
+ Container bd-festivos Stopped 
+ Container bd-festivos Removing 
+ Container bd-festivos Removed 
+ Network arquitecturasoftware2-entregafinal_red-calendario Removing 
+ Network arquitecturasoftware2-entregafinal_red-calendario Removed 
+$ docker compose up -d
+ Container bd-calendario Waiting 
+ Container bd-calendario Healthy 
+ Container api-festivos Healthy 
+ Container api-calendario Starting 
+ Container api-calendario Started 
